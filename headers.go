@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -11,7 +12,12 @@ func main() {
 		fmt.Println("usage: headers <url>")
 		return
 	}
-	response, _ := http.Get(os.Args[1])
+	url := os.Args[1]
+	if !strings.HasPrefix(url, "http") {
+		url = "http://" + url
+		fmt.Printf("prepended http:// to %s...\n", os.Args[1])
+	}
+	response, _ := http.Get(url)
 	for k, v := range response.Header {
 		fmt.Printf("%s: ", k)
 		for _, val := range v {
